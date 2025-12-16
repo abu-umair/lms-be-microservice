@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/abu-umair/lms-be-microservice/internal/utils"
 	"github.com/abu-umair/lms-be-microservice/pb/service"
 )
 
@@ -15,6 +16,7 @@ func (sh *serviceHandler) HelloWorld(ctx context.Context, request *service.Hello
 	// panic(errors.New("pointer nil"))
 	return &service.HelloWorldResponse{
 		Message: fmt.Sprintf("Hello %s", request.Name),
+		Base:    utils.SuccessResponse("Success"),
 	}, nil
 }
 
