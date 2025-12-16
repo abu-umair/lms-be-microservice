@@ -9,6 +9,7 @@ import (
 	"github.com/abu-umair/lms-be-microservice/internal/handler"
 	"github.com/abu-umair/lms-be-microservice/pb/service"
 	"github.com/abu-umair/lms-be-microservice/pkg/database"
+	"github.com/abu-umair/lms-be-microservice/pkg/grpcmiddleware"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -28,7 +29,11 @@ func main() {
 	serviceHandler := handler.NewServiceHandler()
 	log.Println("Connected to DB")
 
-	serv := grpc.NewServer()
+	serv := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(
+			grpcmiddleware.ErrorMiddleware,
+		),
+	)
 
 	service.RegisterHelloWorldServiceServer(serv, serviceHandler)
 

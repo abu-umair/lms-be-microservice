@@ -12,6 +12,7 @@ type serviceHandler struct {
 }
 
 func (sh *serviceHandler) HelloWorld(ctx context.Context, request *service.HelloWorldRequest) (*service.HelloWorldResponse, error) {
+	// panic(errors.New("pointer nil"))
 	return &service.HelloWorldResponse{
 		Message: fmt.Sprintf("Hello %s", request.Name),
 	}, nil
