@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net"
 	"os"
 
 	"github.com/abu-umair/lms-be-microservice/internal/handler"
 	"github.com/abu-umair/lms-be-microservice/pb/service"
+	"github.com/abu-umair/lms-be-microservice/pkg/database"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -14,13 +16,17 @@ import (
 
 func main() {
 	godotenv.Load()
-	
+	ctx := context.Background()
+
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Panicf("Error when listening %v", err)
 	}
 
+	database.ConnectDB(ctx, os.Getenv("DB_URI"))
+
 	serviceHandler := handler.NewServiceHandler()
+	log.Println("Connected to DB")
 
 	serv := grpc.NewServer()
 
