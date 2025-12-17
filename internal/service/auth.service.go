@@ -14,6 +14,7 @@ type authService struct{}
 
 func (as *authService) Register(ctx context.Context, request *auth.RegisterRequest) (*auth.RegisterResponse, error) {
 	//? ngecek email ke DB
+	//* layer repository, utk akses DB (clean arsitektur)
 
 	//? jika emal sudah terdaftar/ada, di error in
 
