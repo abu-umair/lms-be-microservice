@@ -13,6 +13,13 @@ type IAuthService interface {
 type authService struct{}
 
 func (as *authService) Register(ctx context.Context, request *auth.RegisterRequest) (*auth.RegisterResponse, error) {
+	//? ngecek email ke DB
+
+	//? jika emal sudah terdaftar/ada, di error in
+
+	//? Hash password
+
+	//? Insert ke DB 
 	return &auth.RegisterResponse{}, nil
 }
 
