@@ -1,0 +1,36 @@
+package entity
+
+import "time"
+
+const (
+	UserRoleCustomer = "user"
+	UserRoleAdmin    = "admin"
+)
+
+type UserRoles struct {
+	Id        string
+	Name      string
+	Code      string
+	CreatedAt time.Time
+	CreatedBy *string
+	UpdatedAt time.Time
+	UpdatedBy *string
+	DeletedAt time.Time
+	DeletedBy *string
+	IsDeleted bool
+}
+
+type Users struct {
+	Id        string
+	FullName  string
+	Email     string
+	Password  string
+	RoleCode  string
+	CreatedAt time.Time
+	CreatedBy *string
+	UpdatedAt time.Time
+	UpdatedBy *string
+	DeletedAt time.Time
+	DeletedBy *string
+	IsDeleted bool
+}
