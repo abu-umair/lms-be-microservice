@@ -21,6 +21,13 @@ type authService struct {
 }
 
 func (as *authService) Register(ctx context.Context, request *auth.RegisterRequest) (*auth.RegisterResponse, error) {
+	//? apakah password sama dengan confirm password
+	if request.Password != request.PasswordConfirmation {
+		return &auth.RegisterResponse{
+			Base: utils.BadRequestResponse("Password is not matched"),
+		}, nil
+	}
+	
 	//? ngecek email ke DB
 	//* layer repository, utk akses DB (clean arsitektur)
 	user, err := as.authRepository.GetUserByEmail(ctx, request.Email)
