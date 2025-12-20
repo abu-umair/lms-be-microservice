@@ -2,8 +2,8 @@ package entity
 
 import "time"
 
-const (
-	UserRoleCustomer = "user"
+const ( //? kebutuhan di layer service (insert ke DB)
+	UserRoleUser = "user"
 	UserRoleAdmin    = "admin"
 )
 

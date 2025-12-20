@@ -2,10 +2,13 @@ package service
 
 import (
 	"context"
+	"time"
 
+	"github.com/abu-umair/lms-be-microservice/internal/entity"
 	"github.com/abu-umair/lms-be-microservice/internal/repository"
 	"github.com/abu-umair/lms-be-microservice/internal/utils"
 	"github.com/abu-umair/lms-be-microservice/pb/auth"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -31,7 +34,6 @@ func (as *authService) Register(ctx context.Context, request *auth.RegisterReque
 			Base: utils.BadRequestResponse("User already exist"),
 		}, nil
 	}
-	
 
 	//? Hash password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), 10)
@@ -40,7 +42,24 @@ func (as *authService) Register(ctx context.Context, request *auth.RegisterReque
 	}
 
 	//? Insert ke DB
-	return &auth.RegisterResponse{}, nil
+	newUser := entity.Users{
+		Id:        uuid.NewString(),
+		FullName:  request.FullName,
+		Email:     request.Email,
+		Password:  string(hashedPassword),
+		RoleCode:  entity.UserRoleUser,
+		CreatedAt: time.Now(),
+		CreatedBy: &request.FullName,
+	}
+
+	err = as.authRepository.InsertUser(ctx, &newUser)
+	if err != nil {
+		return nil, err
+	}
+
+	return &auth.RegisterResponse{
+		Base: utils.SuccessResponse("User is registered"),
+	}, nil
 }
 
 func NewAuthService(authRepository repository.IAuthRepository) IAuthService {
