@@ -6,6 +6,7 @@ import (
 	"github.com/abu-umair/lms-be-microservice/internal/repository"
 	"github.com/abu-umair/lms-be-microservice/internal/utils"
 	"github.com/abu-umair/lms-be-microservice/pb/auth"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type IAuthService interface {
@@ -24,15 +25,19 @@ func (as *authService) Register(ctx context.Context, request *auth.RegisterReque
 		return nil, err
 	}
 
+	//* jika emal sudah terdaftar/ada, di error in
 	if user != nil {
 		return &auth.RegisterResponse{
 			Base: utils.BadRequestResponse("User already exist"),
 		}, nil
 	}
-
-	//? jika emal sudah terdaftar/ada, di error in
+	
 
 	//? Hash password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), 10)
+	if err != nil {
+		return nil, err
+	}
 
 	//? Insert ke DB
 	return &auth.RegisterResponse{}, nil
