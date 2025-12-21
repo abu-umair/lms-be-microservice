@@ -31,7 +31,7 @@ func (as *authService) Register(ctx context.Context, request *auth.RegisterReque
 	//? ngecek email ke DB
 	//* layer repository, utk akses DB (clean arsitektur)
 	user, err := as.authRepository.GetUserByEmail(ctx, request.Email)
-	if err != nil || user == nil {
+	if err != nil {
 		return nil, err
 	}
 
