@@ -7,7 +7,9 @@ import (
 	"os"
 
 	"github.com/abu-umair/lms-be-microservice/internal/handler"
-	"github.com/abu-umair/lms-be-microservice/pb/service"
+	"github.com/abu-umair/lms-be-microservice/internal/repository"
+	"github.com/abu-umair/lms-be-microservice/internal/service"
+	"github.com/abu-umair/lms-be-microservice/pb/auth"
 	"github.com/abu-umair/lms-be-microservice/pkg/database"
 	"github.com/abu-umair/lms-be-microservice/pkg/grpcmiddleware"
 	"github.com/joho/godotenv"
@@ -24,10 +26,12 @@ func main() {
 		log.Panicf("Error when listening %v", err)
 	}
 
-	database.ConnectDB(ctx, os.Getenv("DB_URI"))
+	db := database.ConnectDB(ctx, os.Getenv("DB_URI"))
 
-	serviceHandler := handler.NewServiceHandler()
 	log.Println("Connected to DB")
+	authRepository := repository.NewAuthRepository(db)
+	authService := service.NewAuthService(authRepository)
+	authHandler := handler.NewAuthHandler(authService)
 
 	serv := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
@@ -35,7 +39,7 @@ func main() {
 		),
 	)
 
-	service.RegisterHelloWorldServiceServer(serv, serviceHandler)
+	auth.RegisterAuthServiceServer(serv, authHandler)
 
 	if os.Getenv("ENVIRONMENT") == "dev" {
 		reflection.Register(serv)
